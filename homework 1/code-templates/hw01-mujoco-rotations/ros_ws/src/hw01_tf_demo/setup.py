@@ -14,12 +14,12 @@ setup(
         (os.path.join("share", package_name, "launch"), glob("launch/*.launch.py")),
         (os.path.join("share", package_name, "rviz"), glob("rviz/*.rviz")),
     ],
-    install_requires=["setuptools"],
+    install_requires=["setuptools", "interactive_markers"],
     zip_safe=True,
     maintainer="Madhu Vadali",
     maintainer_email="madhu.vadali@iitgn.ac.in",
     description=(
-        "ME 639 HW1 Task 3: TF broadcast demo for current-frame vs. "
+        "ME 639 HW1 Task 3: Interactive Marker TF demo for current-frame vs. "
         "fixed-frame rotation composition."
     ),
     license="MIT",

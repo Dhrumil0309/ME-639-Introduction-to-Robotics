@@ -8,6 +8,7 @@ Panels:
         - /TF1
         - /TF1/Frames1
         - /Grid1
+        - /InteractiveMarkers1
       Splitter Ratio: 0.5
     Tree Height: 557
 Visualization Manager:
@@ -40,12 +41,20 @@ Visualization Manager:
           Value: true
         space_frame:
           Value: true
-      Marker Scale: 0.75
+      Marker Scale: 0.8
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: true
       Update Interval: 0
+      Value: true
+    - Class: rviz_default_plugins/InteractiveMarkers
+      Enabled: true
+      Name: InteractiveMarkers
+      Show Axes: false
+      Show Descriptions: true
+      Show Visual Aid: true
+      Update Topic: /rotation_controls/update
       Value: true
   Enabled: true
   Global Options:
@@ -67,18 +76,18 @@ Visualization Manager:
     Current:
       Class: rviz_default_plugins/Orbit
       Distance: 3.5
-      Focal Pitch: 0.4
-      Focal Yaw: 0.8
+      Focal Pitch: 0.35
+      Focal Yaw: 0.75
       Focal Point:
         X: 0.0
         Y: 0.0
         Z: 0.5
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.4
+      Pitch: 0.35
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 0.8
+      Yaw: 0.75
 Window Geometry:
   Height: 800
   Width: 1000

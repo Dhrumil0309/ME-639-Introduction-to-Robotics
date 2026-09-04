@@ -1,66 +1,49 @@
 """
 tf_broadcaster_node.py -- ME 639 HW1 Task 3 (Problem 9)
 =========================================================
-Production-quality ROS 2 node broadcasting space and body TF frames
-demonstrating current-frame (body) vs. fixed-frame (space) rotation
-composition with smooth SLERP animation and interactive terminal control.
+Production-quality ROS 2 node that integrates ROS 2 Interactive Markers
+directly inside RViz2.
 
 FEATURES:
+  - Initializes an InteractiveMarkerServer under the namespace 'rotation_controls'.
+  - Creates an Interactive Marker with 3 rotational controls (rings for X, Y, Z).
+  - Attaches a MenuHandler with 3 right-click context menu options:
+      1. "Set Mode: Current (Body) Frame"
+      2. "Set Mode: Fixed (Space) Frame"
+      3. "Reset to Identity"
+  - Interactive Kinematic Processing:
+      * Captures delta rotation dragged by user from marker feedback.
+      * Computes delta rotation matrix: R_delta = R_pose @ (R_prev_pose)^T
+      * In Current (Body) Frame mode:
+          R_body = R_body @ R_delta (post-multiplication)
+      * In Fixed (Space) Frame mode:
+          R_body = R_delta @ R_body (pre-multiplication)
   - Continuously broadcasts 'space_frame' (fixed at origin) and 'body_frame'
-    at 60 Hz relative to 'world' (or 'space_frame' as parent).
-  - SLERP interpolation smoothly rotates 'body_frame' from old to new orientation
-    over `anim_duration` seconds (default 1.5s) so motion animates cleanly in RViz2.
-  - Background keyboard thread reads commands non-blockingly from stdin:
-      * 'z 90', 'x 90', 'y -45': queue an elemental rotation
-      * 'toggle' or 't': toggle between CURRENT (body) and FIXED (space) frame
-      * 'current' / 'body': set mode to body-frame (post-multiply: R_new = R_old @ R_step)
-      * 'fixed' / 'space': set mode to space-frame (pre-multiply: R_new = R_step @ R_old)
-      * 'reset' or 'r': reset orientation to identity
-      * 'help' or 'h': display command help
-      * 'quit' or 'q': shutdown node cleanly
-  - Also integrates with ROS 2 parameters:
-      ros2 param set /hw01_tf_broadcaster compose_frame fixed
+    at 60 Hz relative to 'space_frame'.
+  - Syncs the interactive marker pose to match R_body so the user sees the rings
+    move together with the body frame.
 """
 
-import sys
-import threading
-import queue
-import time
 import numpy as np
 
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import TransformStamped
+from geometry_msgs.msg import TransformStamped, Pose, Quaternion
 from tf2_ros import TransformBroadcaster
 from rcl_interfaces.msg import SetParametersResult
 
-
-def Rx(t: float) -> np.ndarray:
-    c, s = np.cos(t), np.sin(t)
-    return np.array([[1.0, 0.0, 0.0],
-                     [0.0,   c,  -s],
-                     [0.0,   s,   c]])
-
-
-def Ry(t: float) -> np.ndarray:
-    c, s = np.cos(t), np.sin(t)
-    return np.array([[  c, 0.0,   s],
-                     [0.0, 1.0, 0.0],
-                     [ -s, 0.0,   c]])
-
-
-def Rz(t: float) -> np.ndarray:
-    c, s = np.cos(t), np.sin(t)
-    return np.array([[  c,  -s, 0.0],
-                     [  s,   c, 0.0],
-                     [0.0, 0.0, 1.0]])
-
-
-ELEMENTARY_ROTATIONS = {"x": Rx, "y": Ry, "z": Rz}
+from interactive_markers.interactive_marker_server import InteractiveMarkerServer
+from interactive_markers.menu_handler import MenuHandler
+from visualization_msgs.msg import (
+    InteractiveMarker,
+    InteractiveMarkerControl,
+    InteractiveMarkerFeedback,
+    Marker,
+)
 
 
 def R_to_quat_xyzw(R: np.ndarray) -> np.ndarray:
-    """3x3 rotation matrix -> ROS-convention unit quaternion [x, y, z, w]."""
+    """3x3 rotation matrix -> ROS unit quaternion [x, y, z, w]."""
     R = np.asarray(R, dtype=float)
     tr = np.trace(R)
     if tr > 0.0:
@@ -91,9 +74,13 @@ def R_to_quat_xyzw(R: np.ndarray) -> np.ndarray:
     return q / np.linalg.norm(q)
 
 
-def quat_xyzw_to_R(q: np.ndarray) -> np.ndarray:
-    """ROS-convention unit quaternion [x, y, z, w] -> 3x3 rotation matrix."""
-    x, y, z, w = q
+def quat_xyzw_to_R(q) -> np.ndarray:
+    """ROS unit quaternion (array-like or geometry_msgs/Quaternion) -> 3x3 rotation matrix."""
+    if hasattr(q, "x"):
+        x, y, z, w = q.x, q.y, q.z, q.w
+    else:
+        x, y, z, w = q[0], q[1], q[2], q[3]
+
     n = x * x + y * y + z * z + w * w
     if n < 1e-12:
         return np.eye(3)
@@ -105,237 +92,238 @@ def quat_xyzw_to_R(q: np.ndarray) -> np.ndarray:
     ])
 
 
-def slerp_xyzw(q0: np.ndarray, q1: np.ndarray, t: float) -> np.ndarray:
-    """Spherical linear interpolation between two [x, y, z, w] unit quaternions.
-    Handles shortest-path hemisphere check so rotation never exceeds 180 degrees.
-    """
-    q0 = q0 / np.linalg.norm(q0)
-    q1 = q1 / np.linalg.norm(q1)
-    dot = float(np.dot(q0, q1))
-
-    if dot < 0.0:
-        q1 = -q1
-        dot = -dot
-
-    if dot > 0.9995:
-        q = q0 + t * (q1 - q0)
-        return q / np.linalg.norm(q)
-
-    theta_0 = np.arccos(np.clip(dot, -1.0, 1.0))
-    theta = theta_0 * t
-    q_perp = (q1 - q0 * dot) / np.linalg.norm(q1 - q0 * dot)
-    return q0 * np.cos(theta) + q_perp * np.sin(theta)
-
-
 class Hw01TfBroadcaster(Node):
     def __init__(self):
         super().__init__("hw01_tf_broadcaster")
 
         # Parameters
         self.declare_parameter("compose_frame", "current")  # 'current' (body) or 'fixed' (space)
-        self.declare_parameter("anim_duration", 1.5)        # seconds per SLERP animation
         self.declare_parameter("broadcast_rate", 60.0)      # Hz
 
         self.tf_broadcaster = TransformBroadcaster(self)
 
-        # Orientation state
-        self.R_current = np.eye(3)
-        self.q_current = R_to_quat_xyzw(self.R_current)
+        # Kinematic state: current 3x3 rotation matrix
+        self.R_body = np.eye(3)
+        self.q_body = R_to_quat_xyzw(self.R_body)
 
-        # Animation state
-        self.anim_active = False
-        self.anim_start_time = 0.0
-        self.anim_q_start = self.q_current.copy()
-        self.anim_q_end = self.q_current.copy()
-        self.anim_duration = self.get_parameter("anim_duration").value
+        # Track previous dragged marker orientation to compute relative deltas
+        self.prev_drag_R = np.eye(3)
+        self.is_dragging = False
 
-        # Queue for interactive commands from terminal thread
-        self.cmd_queue = queue.Queue()
+        # Interactive Marker Server and Menu Handler
+        self.server = InteractiveMarkerServer(self, "rotation_controls")
+        self.menu_handler = MenuHandler()
+
+        # Context menu items
+        self.h_body_mode = self.menu_handler.insert(
+            "Set Mode: Current (Body) Frame", callback=self.menu_feedback_cb
+        )
+        self.h_space_mode = self.menu_handler.insert(
+            "Set Mode: Fixed (Space) Frame", callback=self.menu_feedback_cb
+        )
+        self.h_reset = self.menu_handler.insert(
+            "Reset to Identity", callback=self.menu_feedback_cb
+        )
+
+        # Set initial checkmark on menu
+        self.update_menu_checkmarks()
+
+        # Create the Interactive Marker in RViz2
+        self.create_interactive_marker()
 
         # Parameter callback
         self.add_on_set_parameters_callback(self.on_set_parameters)
 
-        # 60 Hz timer loop
+        # 60 Hz timer loop for continuous TF broadcasting
         rate = self.get_parameter("broadcast_rate").value
         self.timer = self.create_timer(1.0 / rate, self.timer_callback)
 
-        # Print welcome banner
-        self.print_banner()
+        self.get_logger().info("=" * 65)
+        self.get_logger().info("  ME 639 HW1 Task 3: Interactive Marker TF Broadcaster")
+        self.get_logger().info(f"  Initial mode: [{self.get_parameter('compose_frame').value.upper()}] frame")
+        self.get_logger().info("  Interact in RViz2:")
+        self.get_logger().info("    - Drag the rotation rings (X/Y/Z) to rotate the body.")
+        self.get_logger().info("    - Right-click the marker to toggle Body vs Space frame or Reset.")
+        self.get_logger().info("=" * 65)
 
-        # Start non-blocking stdin reader thread
-        self.kbd_thread = threading.Thread(target=self._terminal_input_loop, daemon=True)
-        self.kbd_thread.start()
-
-    def print_banner(self):
-        mode = self.get_parameter("compose_frame").value.upper()
-        print("\n" + "=" * 70)
-        print("  ME 639 HW1 Task 3: TF Broadcaster & RViz2 Interactive Demo")
-        print("=" * 70)
-        print(f"  Current composition mode: [{mode}] frame")
-        print("  Commands available in terminal:")
-        print("    <axis> <angle> : e.g. 'z 90', 'x 90', 'y -45' (rotates body)")
-        print("    toggle (or t)  : switch between CURRENT (body) and FIXED (space) frame")
-        print("    current (or c) : use CURRENT frame (post-multiply: R_new = R_old @ R_step)")
-        print("    fixed (or f)   : use FIXED frame   (pre-multiply:  R_new = R_step @ R_old)")
-        print("    reset (or r)   : reset orientation to identity")
-        print("    help (or h)    : show this command help")
-        print("    quit (or q)    : exit node cleanly")
-        print("=" * 70 + "\n")
+    def update_menu_checkmarks(self):
+        mode = self.get_parameter("compose_frame").value.strip().lower()
+        if mode in ("current", "body"):
+            self.menu_handler.setCheckState(self.h_body_mode, MenuHandler.CHECKED)
+            self.menu_handler.setCheckState(self.h_space_mode, MenuHandler.UNCHECKED)
+        else:
+            self.menu_handler.setCheckState(self.h_body_mode, MenuHandler.UNCHECKED)
+            self.menu_handler.setCheckState(self.h_space_mode, MenuHandler.CHECKED)
 
     def on_set_parameters(self, params):
         for param in params:
             if param.name == "compose_frame":
                 val = str(param.value).strip().lower()
                 if val in ("current", "body"):
-                    self.get_logger().info(">> Composition mode set to CURRENT (body) frame (post-mult)")
+                    self.get_logger().info(">> Mode switched to: CURRENT (body) frame [post-multiplication]")
                 elif val in ("fixed", "space"):
-                    self.get_logger().info(">> Composition mode set to FIXED (space) frame (pre-mult)")
+                    self.get_logger().info(">> Mode switched to: FIXED (space) frame [pre-multiplication]")
                 else:
                     return SetParametersResult(successful=False, reason="Must be 'current' or 'fixed'")
-            elif param.name == "anim_duration":
-                self.anim_duration = float(param.value)
-                self.get_logger().info(f">> Animation duration set to {self.anim_duration:.2f}s")
+                self.update_menu_checkmarks()
+                self.menu_handler.reApply(self.server)
+                self.server.applyChanges()
         return SetParametersResult(successful=True)
 
-    def _terminal_input_loop(self):
-        """Runs on a background thread reading lines from sys.stdin."""
-        while rclpy.ok():
-            try:
-                line = sys.stdin.readline()
-                if not line:
-                    break
-                text = line.strip()
-                if text:
-                    self.cmd_queue.put(text)
-            except Exception:
-                break
+    def create_interactive_marker(self):
+        int_marker = InteractiveMarker()
+        int_marker.header.frame_id = "space_frame"
+        int_marker.name = "body_rotation_marker"
+        int_marker.description = "Right-click: Menu | Drag rings: Rotate"
+        int_marker.scale = 1.2
 
-    def timer_callback(self):
-        now_sec = self.get_clock().now().nanoseconds * 1e-9
+        # Position at the body origin (z = 0.8)
+        int_marker.pose.position.x = 0.0
+        int_marker.pose.position.y = 0.0
+        int_marker.pose.position.z = 0.8
 
-        # Process pending commands from terminal
-        while not self.cmd_queue.empty():
-            cmd = self.cmd_queue.get_nowait()
-            self.handle_command(cmd, now_sec)
+        qx, qy, qz, qw = self.q_body
+        int_marker.pose.orientation.x = qx
+        int_marker.pose.orientation.y = qy
+        int_marker.pose.orientation.z = qz
+        int_marker.pose.orientation.w = qw
 
-        # Update animation if active
-        if self.anim_active:
-            elapsed = now_sec - self.anim_start_time
-            alpha = min(1.0, elapsed / max(0.01, self.anim_duration))
-            self.q_current = slerp_xyzw(self.anim_q_start, self.anim_q_end, alpha)
+        # Visual center sphere marker
+        center_marker = Marker()
+        center_marker.type = Marker.SPHERE
+        center_marker.scale.x = 0.15
+        center_marker.scale.y = 0.15
+        center_marker.scale.z = 0.15
+        center_marker.color.r = 0.9
+        center_marker.color.g = 0.7
+        center_marker.color.b = 0.1
+        center_marker.color.a = 0.8
 
-            if alpha >= 1.0:
-                self.anim_active = False
-                self.q_current = self.anim_q_end.copy()
-                self.R_current = quat_xyzw_to_R(self.q_current)
+        menu_control = InteractiveMarkerControl()
+        menu_control.interaction_mode = InteractiveMarkerControl.BUTTON
+        menu_control.always_visible = True
+        menu_control.markers.append(center_marker)
+        int_marker.controls.append(menu_control)
 
-        # Broadcast frames
-        stamp = self.get_clock().now().to_msg()
+        # 3 Rotation ring controls: X, Y, Z
+        # 1. Rotate about X-axis
+        ctrl_x = InteractiveMarkerControl()
+        ctrl_x.name = "rotate_x"
+        ctrl_x.interaction_mode = InteractiveMarkerControl.ROTATE_AXIS
+        ctrl_x.orientation.w = 1.0
+        ctrl_x.orientation.x = 1.0
+        ctrl_x.orientation.y = 0.0
+        ctrl_x.orientation.z = 0.0
+        int_marker.controls.append(ctrl_x)
 
-        # 1. Space frame: fixed at origin (parent = world)
-        self.broadcast_transform(
-            parent_frame="world",
-            child_frame="space_frame",
-            trans=(0.0, 0.0, 0.0),
-            quat=(0.0, 0.0, 0.0, 1.0),
-            stamp=stamp
-        )
+        # 2. Rotate about Y-axis
+        ctrl_y = InteractiveMarkerControl()
+        ctrl_y.name = "rotate_y"
+        ctrl_y.interaction_mode = InteractiveMarkerControl.ROTATE_AXIS
+        ctrl_y.orientation.w = 1.0
+        ctrl_y.orientation.x = 0.0
+        ctrl_y.orientation.y = 1.0
+        ctrl_y.orientation.z = 0.0
+        int_marker.controls.append(ctrl_y)
 
-        # 2. Body frame: animated child of space_frame (or world)
-        self.broadcast_transform(
-            parent_frame="space_frame",
-            child_frame="body_frame",
-            trans=(0.0, 0.0, 0.8),
-            quat=tuple(self.q_current),
-            stamp=stamp
-        )
+        # 3. Rotate about Z-axis
+        ctrl_z = InteractiveMarkerControl()
+        ctrl_z.name = "rotate_z"
+        ctrl_z.interaction_mode = InteractiveMarkerControl.ROTATE_AXIS
+        ctrl_z.orientation.w = 1.0
+        ctrl_z.orientation.x = 0.0
+        ctrl_z.orientation.y = 0.0
+        ctrl_z.orientation.z = 1.0
+        int_marker.controls.append(ctrl_z)
 
-    def handle_command(self, cmd: str, now_sec: float):
-        tokens = cmd.strip().split()
-        if not tokens:
-            return
+        # Add to server with feedback callback
+        self.server.insert(int_marker, feedback_callback=self.process_feedback)
+        self.menu_handler.apply(self.server, int_marker.name)
+        self.server.applyChanges()
 
-        action = tokens[0].lower()
+    def menu_feedback_cb(self, feedback: InteractiveMarkerFeedback):
+        entry_id = feedback.menu_entry_id
 
-        if action in ("q", "quit", "exit"):
-            self.get_logger().info("Shutting down hw01_tf_broadcaster...")
-            rclpy.shutdown()
-            return
-
-        elif action in ("t", "toggle"):
-            curr = self.get_parameter("compose_frame").value.strip().lower()
-            new_mode = "fixed" if curr in ("current", "body") else "current"
-            self.set_parameters([
-                rclpy.parameter.Parameter("compose_frame", rclpy.Parameter.Type.STRING, new_mode)
-            ])
-            self.get_logger().info(f"Mode toggled to: {new_mode.upper()} frame")
-            return
-
-        elif action in ("c", "current", "body"):
+        if entry_id == self.h_body_mode:
             self.set_parameters([
                 rclpy.parameter.Parameter("compose_frame", rclpy.Parameter.Type.STRING, "current")
             ])
-            self.get_logger().info("Mode set to: CURRENT (body) frame")
-            return
+            self.get_logger().info(">> Menu: Set Mode -> CURRENT (Body) Frame [post-multiplication]")
 
-        elif action in ("f", "fixed", "space"):
+        elif entry_id == self.h_space_mode:
             self.set_parameters([
                 rclpy.parameter.Parameter("compose_frame", rclpy.Parameter.Type.STRING, "fixed")
             ])
-            self.get_logger().info("Mode set to: FIXED (space) frame")
-            return
+            self.get_logger().info(">> Menu: Set Mode -> FIXED (Space) Frame [pre-multiplication]")
 
-        elif action in ("r", "reset"):
-            self.trigger_rotation(np.eye(3), now_sec, label="RESET to Identity")
-            return
+        elif entry_id == self.h_reset:
+            self.get_logger().info(">> Menu: Reset to Identity")
+            self.R_body = np.eye(3)
+            self.q_body = R_to_quat_xyzw(self.R_body)
+            self.prev_drag_R = np.eye(3)
+            self.sync_marker_pose()
+            self.print_matrix(self.R_body, "Reset Rotation Matrix R:")
 
-        elif action in ("h", "help"):
-            self.print_banner()
-            return
+    def process_feedback(self, feedback: InteractiveMarkerFeedback):
+        event_type = feedback.event_type
 
-        # Check for rotation command: <axis> <angle_deg>
-        if action in ("x", "y", "z") and len(tokens) >= 2:
-            try:
-                angle_deg = float(tokens[1])
-                angle_rad = np.deg2rad(angle_deg)
-                R_step = ELEMENTARY_ROTATIONS[action](angle_rad)
+        # When drag starts, record the current marker orientation as baseline
+        if event_type == InteractiveMarkerFeedback.MOUSE_DOWN:
+            self.prev_drag_R = quat_xyzw_to_R(feedback.pose.orientation)
+            self.is_dragging = True
 
-                frame_mode = self.get_parameter("compose_frame").value.strip().lower()
+        elif event_type == InteractiveMarkerFeedback.POSE_UPDATE:
+            R_marker_now = quat_xyzw_to_R(feedback.pose.orientation)
 
-                # Start from latest target orientation if currently animating
-                R_base = quat_xyzw_to_R(self.anim_q_end) if self.anim_active else self.R_current
+            if not self.is_dragging:
+                self.prev_drag_R = R_marker_now
+                self.is_dragging = True
+                return
 
-                if frame_mode in ("current", "body"):
-                    # Post-multiplication (body frame)
-                    R_target = R_base @ R_step
-                    rule = "R_new = R_old @ R_step [POST-mult, BODY frame]"
-                else:
-                    # Pre-multiplication (space frame)
-                    R_target = R_step @ R_base
-                    rule = "R_new = R_step @ R_old [PRE-mult, SPACE frame]"
+            # Compute delta rotation: R_delta = R_marker_now @ (R_prev_drag)^T
+            R_delta = R_marker_now @ self.prev_drag_R.T
 
-                label = f"Rot({action.upper()}, {angle_deg:+.1f}°) via {rule}"
-                self.trigger_rotation(R_target, now_sec, label=label)
+            # Filter out tiny jitter
+            if np.linalg.norm(R_delta - np.eye(3), ord='fro') < 1e-4:
+                return
 
-            except ValueError:
-                self.get_logger().warn(f"Invalid angle format: '{tokens[1]}'. Example: 'z 90'")
-        else:
-            self.get_logger().warn(f"Unknown command: '{cmd}'. Type 'h' or 'help' for command list.")
+            frame_mode = self.get_parameter("compose_frame").value.strip().lower()
 
-    def trigger_rotation(self, R_target: np.ndarray, now_sec: float, label: str = ""):
-        self.anim_q_start = self.q_current.copy()
-        self.anim_q_end = R_to_quat_xyzw(R_target)
+            if frame_mode in ("current", "body"):
+                # Post-multiplication: R_new = R_old @ R_delta (body frame)
+                self.R_body = self.R_body @ R_delta
+            else:
+                # Pre-multiplication: R_new = R_delta @ R_old (space frame)
+                self.R_body = R_delta @ self.R_body
 
-        # Shortest-path check
-        if np.dot(self.anim_q_start, self.anim_q_end) < 0.0:
-            self.anim_q_end = -self.anim_q_end
+            # Re-orthogonalize R_body to prevent numerical drift
+            u, _, vt = np.linalg.svd(self.R_body)
+            self.R_body = u @ vt
 
-        self.anim_start_time = now_sec
-        self.anim_active = True
+            self.q_body = R_to_quat_xyzw(self.R_body)
+            self.prev_drag_R = R_marker_now
 
-        if label:
-            self.get_logger().info(f">> {label}")
-            self.print_matrix(R_target, "Target Rotation Matrix R:")
+        elif event_type == InteractiveMarkerFeedback.MOUSE_UP:
+            self.is_dragging = False
+            # When user releases mouse, align the marker orientation directly to R_body
+            self.sync_marker_pose()
+            mode = self.get_parameter("compose_frame").value.upper()
+            rule = "POST-mult (Body)" if mode == "CURRENT" else "PRE-mult (Space)"
+            self.print_matrix(self.R_body, f"Current R_body ({mode} Frame - {rule}):")
+
+    def sync_marker_pose(self):
+        new_pose = Pose()
+        new_pose.position.x = 0.0
+        new_pose.position.y = 0.0
+        new_pose.position.z = 0.8
+        qx, qy, qz, qw = self.q_body
+        new_pose.orientation.x = qx
+        new_pose.orientation.y = qy
+        new_pose.orientation.z = qz
+        new_pose.orientation.w = qw
+
+        self.server.setPose("body_rotation_marker", new_pose)
+        self.server.applyChanges()
 
     def print_matrix(self, R: np.ndarray, title: str):
         print(f"\n  {title}")
@@ -344,6 +332,27 @@ class Hw01TfBroadcaster(Node):
             vals = "   ".join(f"{v:+10.5f}" for v in row)
             print(f"  {lbl}  {vals}")
         print()
+
+    def timer_callback(self):
+        stamp = self.get_clock().now().to_msg()
+
+        # 1. Broadcast space_frame fixed at world origin
+        self.broadcast_transform(
+            parent_frame="world",
+            child_frame="space_frame",
+            trans=(0.0, 0.0, 0.0),
+            quat=(0.0, 0.0, 0.0, 1.0),
+            stamp=stamp
+        )
+
+        # 2. Broadcast body_frame relative to space_frame
+        self.broadcast_transform(
+            parent_frame="space_frame",
+            child_frame="body_frame",
+            trans=(0.0, 0.0, 0.8),
+            quat=tuple(self.q_body),
+            stamp=stamp
+        )
 
     def broadcast_transform(self, parent_frame: str, child_frame: str,
                             trans: tuple, quat: tuple, stamp):
