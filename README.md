@@ -43,7 +43,7 @@ ME-639-Introduction-to-Robotics/
 * 📄 **Assignment Prompt**: [`homework 1/ME_639_Homework_1.pdf`](./homework%201/ME_639_Homework_1.pdf)
 * 🎯 **3D MuJoCo Model**: [`homework 1/code-templates/hw01-mujoco-rotations/model/asymmetric_body.xml`](./homework%201/code-templates/hw01-mujoco-rotations/model/asymmetric_body.xml)
 * 🔄 **Problem 7 Simulation**: [`homework 1/code-templates/hw01-mujoco-rotations/scripts/01_rotation_sandbox.py`](./homework%201/code-templates/hw01-mujoco-rotations/scripts/01_rotation_sandbox.py)
-* [**Youtube link**]((https://youtu.be/LcqWxAOiutM)).
+* [**Youtube link**]:(https://youtu.be/LcqWxAOiutM).
 * 📐 **Problem 8 Simulation**: [`homework 1/code-templates/hw01-mujoco-rotations/scripts/02_verify_skew_properties.py`](./homework%201/code-templates/hw01-mujoco-rotations/scripts/02_verify_skew_properties.py)
 * 📊 **Problem 8 Residuals CSV**: [`homework 1/code-templates/hw01-mujoco-rotations/scripts/skew_verification_residuals.csv`](./homework%201/code-templates/hw01-mujoco-rotations/scripts/skew_verification_residuals.csv)
 * 🤖 **Problem 9 ROS 2 Node**: [`homework 1/ros_ws/src/hw01_tf_demo/hw01_tf_demo/tf_broadcaster_node.py`](./homework%201/ros_ws/src/hw01_tf_demo/hw01_tf_demo/tf_broadcaster_node.py)
