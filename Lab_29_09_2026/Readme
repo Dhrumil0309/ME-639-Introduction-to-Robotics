@@ -1,6 +1,3 @@
-Yes — below is a **single copy-paste-ready `README.md`** with the formatting cleaned up, equations corrected, and the repository/run instructions structured properly.
-
-````markdown
 # Lab: Forward Kinematics and Physics Simulation in MuJoCo
 
 This laboratory project focuses on the implementation, visualization, and validation of **Forward Kinematics (FK)** for robotic manipulators using Python, NumPy, Robotics Toolbox, and the **MuJoCo physics engine**.
@@ -9,7 +6,15 @@ The project includes analytical forward kinematics for planar and spatial manipu
 
 ---
 
-## Repository Structure
+## 🎥 Project Demo
+
+[![Watch the Project Demo](https://img.youtube.com/vi/VH6RUUwDnO4/0.jpg)](https://youtu.be/VH6RUUwDnO4)
+
+**Click the image above to watch the complete project demonstration on YouTube.**
+
+---
+
+# 1. Repository Structure
 
 ```text
 Lab_29_09_2026/
@@ -25,40 +30,40 @@ Lab_29_09_2026/
 ├── task_3_final.py
 │
 └── README.md
-````
+```
 
 ### Description of Files and Directories
 
-| File / Directory      | Description                                                               |
-| --------------------- | ------------------------------------------------------------------------- |
-| `ITR_mujoco_fk_lab/`  | Main directory containing robot models and simulation resources           |
-| `robot_descriptions/` | Custom robot and environment XML descriptions                             |
-| `arm_gripper.xml`     | XML model describing the custom 6-DOF arm and gripper                     |
-| `arena_description/`  | Environment and table/arena XML files                                     |
-| `mujoco_menagerie/`   | Robot model collection containing models such as UR5e and Franka Panda    |
-| `task_3_final.py`     | Main Python script for interactive MuJoCo simulation and live FK tracking |
-| `README.md`           | Project documentation                                                     |
+| File / Directory | Description |
+|---|---|
+| `ITR_mujoco_fk_lab/` | Main directory containing robot models and simulation resources |
+| `robot_descriptions/` | Custom robot and environment XML descriptions |
+| `arm_gripper.xml` | XML model describing the custom 6-DOF arm and gripper |
+| `arena_description/` | Environment and table/arena XML files |
+| `mujoco_menagerie/` | Robot model collection containing models such as UR5e and Franka Panda |
+| `task_3_final.py` | Main Python script for interactive MuJoCo simulation and live FK tracking |
+| `README.md` | Project documentation |
 
 ---
 
-# 1. Objective
+# 2. Objective
 
 The main objectives of this laboratory are:
 
-* To understand the mathematical foundations of **Forward Kinematics**.
-* To calculate the position and orientation of a robot's end-effector from its joint variables.
-* To implement forward kinematics using homogeneous transformation matrices.
-* To validate analytical calculations using numerical Python implementations.
-* To use Robotics Toolbox for verification of kinematic transformations.
-* To integrate forward kinematics with the MuJoCo physics engine.
-* To visualize robot motion and end-effector coordinates in real time.
-* To compare calculated kinematic results with the robot model simulated in MuJoCo.
+- To understand the mathematical foundations of **Forward Kinematics**.
+- To calculate the position and orientation of a robot's end-effector from its joint variables.
+- To implement forward kinematics using homogeneous transformation matrices.
+- To validate analytical calculations using numerical Python implementations.
+- To use Robotics Toolbox for verification of kinematic transformations.
+- To integrate forward kinematics with the MuJoCo physics engine.
+- To visualize robot motion and end-effector coordinates in real time.
+- To compare calculated kinematic results with the robot model simulated in MuJoCo.
 
 ---
 
-# 2. Theoretical Background
+# 3. Theoretical Background
 
-## 2.1 Forward Kinematics
+## 3.1 Forward Kinematics
 
 Forward Kinematics (FK) determines the position and orientation of a robot's end-effector with respect to a reference frame when the joint variables are known.
 
@@ -78,9 +83,9 @@ $$
 
 where:
 
-* $\boldsymbol{\theta}$ represents the joint angles or joint variables.
-* $\mathbf{x}$ represents the Cartesian pose of the end-effector.
-* $f(\cdot)$ represents the forward kinematic transformation.
+- $\boldsymbol{\theta}$ represents the joint angles or joint variables.
+- $\mathbf{x}$ represents the Cartesian pose of the end-effector.
+- $f(\cdot)$ represents the forward kinematic transformation.
 
 For a spatial manipulator, the complete pose is generally represented using a homogeneous transformation matrix:
 
@@ -94,12 +99,12 @@ $$
 
 where:
 
-* $R$ is the $3\times3$ rotation matrix representing orientation.
-* $p$ is the $3\times1$ position vector representing the end-effector location.
+- $R$ is the $3\times3$ rotation matrix representing orientation.
+- $p$ is the $3\times1$ position vector representing the end-effector location.
 
 ---
 
-# 3. 2-DOF Planar Manipulator
+# 4. 2-DOF Planar Manipulator
 
 For a planar robotic arm with two revolute joints and link lengths $L_1$ and $L_2$, the end-effector position can be obtained using basic trigonometry.
 
@@ -121,18 +126,18 @@ $$
 
 where:
 
-* $L_1$ = length of the first link.
-* $L_2$ = length of the second link.
-* $\theta_1$ = angle of the first joint relative to the base.
-* $\theta_2$ = relative angle of the second joint.
+- $L_1$ = length of the first link.
+- $L_2$ = length of the second link.
+- $\theta_1$ = angle of the first joint relative to the base.
+- $\theta_2$ = relative angle of the second joint.
 
-The end-effector orientation for the planar manipulator is
+The end-effector orientation for the planar manipulator is:
 
 $$
 \phi = \theta_1 + \theta_2
 $$
 
-Therefore, the complete planar pose can be represented as
+Therefore, the complete planar pose can be represented as:
 
 $$
 \mathbf{x}
@@ -146,18 +151,18 @@ $$
 
 ---
 
-# 4. Spatial Manipulator Kinematics
+# 5. Spatial Manipulator Kinematics
 
 For spatial robotic manipulators such as the **6-DOF UR5e** and **7-DOF Franka Emika Panda**, the relationship between consecutive coordinate frames can be represented using homogeneous transformation matrices.
 
 The Denavit-Hartenberg (DH) convention uses four parameters:
 
-* $a_i$ — link length
-* $\alpha_i$ — link twist
-* $d_i$ — link offset
-* $\theta_i$ — joint angle
+- $a_i$ — link length
+- $\alpha_i$ — link twist
+- $d_i$ — link offset
+- $\theta_i$ — joint angle
 
-The homogeneous transformation from frame $i-1$ to frame $i$ is
+The homogeneous transformation from frame $i-1$ to frame $i$ is:
 
 $$
 T_i^{i-1}
@@ -194,7 +199,7 @@ T_2^3
 T_{n-1}^n
 $$
 
-or equivalently, depending on the transformation notation convention,
+or equivalently, depending on the transformation notation convention:
 
 $$
 T_{\mathrm{total}}
@@ -206,7 +211,7 @@ T_3^2
 T_n^{n-1}
 $$
 
-The resulting matrix has the form
+The resulting matrix has the form:
 
 $$
 T_{\mathrm{total}}
@@ -234,82 +239,82 @@ represents the Cartesian position of the end-effector, while the upper-left $3\t
 
 ---
 
-# 5. Numerical Implementation
+# 6. Numerical Implementation
 
 The project implements the forward kinematics calculations using Python.
 
-## 5.1 NumPy Implementation
+## 6.1 NumPy Implementation
 
 A from-scratch implementation using **NumPy** is used to:
 
-* Construct rotation matrices.
-* Construct homogeneous transformation matrices.
-* Perform matrix multiplication.
-* Propagate transformations from the base to the end-effector.
-* Calculate the final Cartesian position and orientation.
-* Validate the mathematical derivation independently of MuJoCo.
+- Construct rotation matrices.
+- Construct homogeneous transformation matrices.
+- Perform matrix multiplication.
+- Propagate transformations from the base to the end-effector.
+- Calculate the final Cartesian position and orientation.
+- Validate the mathematical derivation independently of MuJoCo.
 
 This provides a direct numerical implementation of the underlying kinematic equations.
 
 ---
 
-## 5.2 Robotics Toolbox
+## 6.2 Robotics Toolbox
 
 The **Robotics Toolbox for Python** is used as an additional verification tool.
 
 It is used for:
 
-* Defining robot kinematic models.
-* Calculating forward kinematics.
-* Verifying homogeneous transformation matrices.
-* Comparing analytical and numerical results.
-* Visualizing robot configurations.
+- Defining robot kinematic models.
+- Calculating forward kinematics.
+- Verifying homogeneous transformation matrices.
+- Comparing analytical and numerical results.
+- Visualizing robot configurations.
 
 The toolbox provides an independent reference against which the manually implemented forward kinematics can be compared.
 
 ---
 
-# 6. MuJoCo Physics Simulation
+# 7. MuJoCo Physics Simulation
 
 The project integrates the forward kinematics implementation with **MuJoCo**, a physics engine designed for robotics and articulated-body simulation.
 
 The simulation uses XML-based robot descriptions to define:
 
-* Robot links
-* Joints
-* Geometries
-* Coordinate frames
-* Actuators
-* Environment objects
-* Collision properties
-* Physical parameters
+- Robot links
+- Joints
+- Geometries
+- Coordinate frames
+- Actuators
+- Environment objects
+- Collision properties
+- Physical parameters
 
 The project uses models from the **MuJoCo Menagerie**, including:
 
-* **Franka Emika Panda**
-* **UR5e**
+- **Franka Emika Panda**
+- **UR5e**
 
 along with custom laboratory robot descriptions.
 
 ---
 
-# 7. Coordinate Frames
+# 8. Coordinate Frames
 
 The MuJoCo visualization provides coordinate-frame information for the robot.
 
 The standard Cartesian coordinate convention is:
 
-| Axis   | Representation |
-| ------ | -------------- |
-| X-axis | Red            |
-| Y-axis | Green          |
-| Z-axis | Blue           |
+| Axis | Representation |
+|---|---|
+| X-axis | Red |
+| Y-axis | Green |
+| Z-axis | Blue |
 
 These coordinate frames help visualize the orientation and position of the robot's links and end-effector.
 
 ---
 
-# 8. Live End-Effector Tracking
+# 9. Live End-Effector Tracking
 
 The MuJoCo Python API provides access to the simulated state of the robot.
 
@@ -331,7 +336,7 @@ This provides a practical validation of the forward kinematics implementation.
 
 ---
 
-# 9. Interactive Simulation
+# 10. Interactive Simulation
 
 The main simulation is implemented in:
 
@@ -343,21 +348,21 @@ The script launches the MuJoCo viewer and allows the user to interact with the r
 
 The simulation provides:
 
-* Interactive robot visualization.
-* Joint-angle control.
-* Real-time robot movement.
-* End-effector Cartesian tracking.
-* Live forward kinematics calculations.
-* Terminal output of XYZ coordinates.
-* Visualization of coordinate frames.
+- Interactive robot visualization.
+- Joint-angle control.
+- Real-time robot movement.
+- End-effector Cartesian tracking.
+- Live forward kinematics calculations.
+- Terminal output of XYZ coordinates.
+- Visualization of coordinate frames.
 
 ---
 
-# 10. Robot Models
+# 11. Robot Models
 
-## Franka Emika Panda
+## 11.1 Franka Emika Panda
 
-The Franka Emika Panda is a 7-DOF robotic manipulator.
+The **Franka Emika Panda** is a 7-DOF robotic manipulator.
 
 It is used in the simulation to demonstrate forward kinematics for a redundant spatial manipulator.
 
@@ -365,9 +370,9 @@ The seven joint variables are used to determine the resulting end-effector pose.
 
 ---
 
-## UR5e
+## 11.2 UR5e
 
-The UR5e is a 6-DOF industrial robotic manipulator.
+The **UR5e** is a 6-DOF industrial robotic manipulator.
 
 It provides a practical example of spatial forward kinematics for a standard six-joint robotic arm.
 
@@ -375,32 +380,30 @@ The joint configuration is mapped to the end-effector pose through the robot's k
 
 ---
 
-# 11. Software Requirements
+# 12. Software Requirements
 
 The project requires:
 
-* Python 3
-* NumPy
-* MuJoCo
-* Robotics Toolbox for Python
-* Matplotlib (if required by the visualization/robotics toolbox)
-* A working MuJoCo-compatible graphical environment
+- Python 3
+- NumPy
+- MuJoCo
+- Robotics Toolbox for Python
+- Matplotlib, if required by the visualization/robotics toolbox
+- A working MuJoCo-compatible graphical environment
 
 The recommended environment is an Ubuntu-based system with a Python or Conda virtual environment.
 
 ---
 
-# 12. Environment Setup
+# 13. Environment Setup
 
-Create or activate the required Python environment.
-
-### Using Conda
+## Using Conda
 
 ```bash
 conda activate mujoco_env
 ```
 
-### Using a Python virtual environment
+## Using a Python Virtual Environment
 
 ```bash
 source mujoco_env/bin/activate
@@ -414,7 +417,7 @@ pip install numpy mujoco roboticstoolbox-python matplotlib
 
 ---
 
-# 13. Running the Simulation
+# 14. Running the Simulation
 
 Navigate to the project directory:
 
@@ -438,7 +441,7 @@ The MuJoCo viewer should open and display the selected robot model.
 
 ---
 
-# 14. Using the Simulation
+# 15. Using the Simulation
 
 After launching the program:
 
@@ -458,19 +461,19 @@ The available robot selection is:
 
 ---
 
-# 15. Validation Approach
+# 16. Validation Approach
 
-The implementation can be validated through three different approaches:
+The implementation can be validated through three different approaches.
 
-### Analytical Calculation
+## Analytical Calculation
 
 The forward kinematics equations are derived using trigonometric relationships or homogeneous transformation matrices.
 
-### Numerical Python Implementation
+## Numerical Python Implementation
 
 The analytical equations are implemented using NumPy to calculate the transformation matrix and end-effector pose.
 
-### MuJoCo Simulation
+## MuJoCo Simulation
 
 The resulting robot configuration is simulated in MuJoCo and the corresponding end-effector position is obtained directly from the simulation state.
 
@@ -478,38 +481,40 @@ The three approaches can then be compared to verify the correctness of the imple
 
 ---
 
-# 16. Workflow
+# 17. Project Workflow
 
 The overall workflow of the project is:
 
 ```text
-Joint Angles
-     │
-     ▼
-Forward Kinematics Equations
-     │
-     ▼
-Homogeneous Transformation Matrices
-     │
-     ▼
-NumPy Numerical Implementation
-     │
-     ├───────────────┐
-     ▼               ▼
-Robotics Toolbox   MuJoCo
-     │               │
-     ▼               ▼
-FK Verification   Physics Simulation
-     │               │
-     └───────┬───────┘
-             ▼
-      End-Effector Pose
-       (X, Y, Z, R)
+                Joint Angles
+                     │
+                     ▼
+        Forward Kinematics Equations
+                     │
+                     ▼
+       Homogeneous Transformation
+               Matrices
+                     │
+                     ▼
+         NumPy Numerical
+           Implementation
+                     │
+              ┌──────┴──────┐
+              ▼             ▼
+     Robotics Toolbox      MuJoCo
+              │             │
+              ▼             ▼
+      FK Verification   Physics Simulation
+              │             │
+              └──────┬──────┘
+                     ▼
+             End-Effector Pose
+                (X, Y, Z, R)
 ```
 
 ---
 
-# 17. Expected Output
+# 18. Expected Output
 
 When the simulation is running, changing the joint angles should result in corresponding changes in the robot configuration and end-effector position.
 
@@ -528,48 +533,56 @@ The calculated values can be compared with the position obtained from the forwar
 
 ---
 
-# 18. Key Concepts Demonstrated
+# 19. Key Concepts Demonstrated
 
 This laboratory demonstrates the following concepts:
 
-* Forward Kinematics
-* Robot coordinate frames
-* Joint-space and Cartesian-space representation
-* Rotation matrices
-* Homogeneous transformation matrices
-* Denavit-Hartenberg parameters
-* Serial kinematic chains
-* Numerical matrix multiplication
-* End-effector pose calculation
-* Robotics Toolbox
-* MuJoCo simulation
-* Real-time robot visualization
-* Cartesian position tracking
-* Kinematic validation
+- Forward Kinematics
+- Robot coordinate frames
+- Joint-space and Cartesian-space representation
+- Rotation matrices
+- Homogeneous transformation matrices
+- Denavit-Hartenberg parameters
+- Serial kinematic chains
+- Numerical matrix multiplication
+- End-effector pose calculation
+- Robotics Toolbox
+- MuJoCo simulation
+- Real-time robot visualization
+- Cartesian position tracking
+- Kinematic validation
 
 ---
 
-# 19. Conclusion
+# 20. Conclusion
 
 This laboratory provides a complete workflow for understanding and implementing forward kinematics for robotic manipulators.
 
 The mathematical formulation is first established using planar trigonometric relationships and homogeneous transformation matrices. These formulations are then implemented numerically using Python and NumPy and independently verified using Robotics Toolbox.
 
-The implementation is further integrated with MuJoCo to provide an interactive physics-based simulation of 6-DOF and 7-DOF robotic manipulators. By changing the joint variables and observing the resulting end-effector position, the relationship between joint-space motion and Cartesian-space motion can be studied and validated in real time.
+The implementation is further integrated with MuJoCo to provide an interactive physics-based simulation of 6-DOF and 7-DOF robotic manipulators.
+
+By changing the joint variables and observing the resulting end-effector position, the relationship between joint-space motion and Cartesian-space motion can be studied and validated in real time.
 
 ---
 
-## Author
+# 👤 Author
 
 **Dhrumil Bhutaiya**
-B.Tech. Mechanical Engineering
+
+B.Tech. Mechanical Engineering  
 IIT Gandhinagar
 
 ---
 
-## License
+# 🎥 Project Demonstration
+
+[![Watch the Project Demo](https://img.youtube.com/vi/VH6RUUwDnO4/0.jpg)](https://youtu.be/VH6RUUwDnO4)
+
+**[▶ Watch the Full Project Demonstration on YouTube](https://youtu.be/VH6RUUwDnO4)**
+
+---
+
+# 📄 License
 
 This project is intended for academic and laboratory purposes.
-
-```
-```
