@@ -24,6 +24,13 @@ git clone https://github.com/google-deepmind/mujoco_menagerie.git
 pip install mujoco numpy
 ```
 
+## Youtube Video
+## Project Demo
+
+[![Watch the Project Demo](https://img.youtube.com/vi/VH6RUUwDnO4/0.jpg)](https://youtu.be/VH6RUUwDnO4)
+
+**Click the image above to watch the project demonstration on YouTube.**
+
 ## Run
 ```bash
 python lab_challenge_1.py
