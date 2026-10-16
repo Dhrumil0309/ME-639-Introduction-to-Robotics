@@ -1,0 +1,26 @@
+episode,seed,cube_x,cube_y,cube_yaw,plan_time_s,ik_time_s,ik_iters_total,ik_iters_mean,ik_iters_max,waypoints,joint_limit_viol,plan_min_clear,yaw_tries,grasp_yaw,place_yaw,success,failure_reason,vel_viol,max_vel_ratio,min_clear_robot,min_clear_cube_tray,cube_tray_contact,final_cube_x,final_cube_y,final_cube_z,sim_time_s,method
+0,0,0.5658,0.3467,0.67,0.0536,0.0454,797,5.9,6,135,0,0.0,1,0.67,0.67,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.271,0.0,-0.0541,True,0.4935,-0.2063,0.1198,8.29,qp
+1,1,0.4784,0.3784,-2.2358,0.0773,0.0727,1334,10.67,150,125,0,0.0,1,,,False,"ik_infeasible (joint7 at limit, err 7 mm) @ above_tray",0,0.0,0.2,,False,0.4784,0.3784,0.1198,0.3,qp
+2,2,0.4059,-0.1693,1.9743,0.035,0.0292,458,6.03,7,76,0,0.0,1,1.974,1.974,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.335,0.0,-0.0017,True,0.4341,-0.2091,0.1198,5.46,qp
+3,3,0.5624,0.069,-2.5502,0.0459,0.04,721,7.92,15,91,0,0.0,1,-2.55,-2.55,False,collision right_finger-tray_wall_py @ above_tray,0,0.764,-0.0002,-0.0049,True,0.4979,-0.2055,0.1198,6.18,qp
+4,4,0.6035,0.0095,2.9923,0.0478,0.0392,502,5.77,6,87,0,0.0,1,2.992,2.992,True,,0,0.386,0.0,-0.0113,True,0.4888,-0.3217,0.1238,7.88,qp
+5,5,0.5635,0.2587,0.0963,0.0477,0.0403,711,5.92,6,120,0,0.0,1,0.096,0.096,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.4,0.0,-0.0117,True,0.4972,-0.303,0.1238,7.57,qp
+6,6,0.4861,-0.1317,-0.8227,0.0319,0.0262,432,5.92,7,73,0,0.0,1,-0.823,-0.823,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.534,0.0,-0.0031,True,0.4665,-0.2007,0.1198,5.32,qp
+7,7,0.5113,0.3337,1.7322,0.0523,0.0444,780,5.91,6,132,0,0.0,1,1.732,1.732,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.199,0.0,-0.0016,True,0.4766,-0.2078,0.1198,8.15,qp
+8,8,0.4248,0.4093,-1.1391,0.0605,0.0513,884,5.97,7,148,0,0.0,1,-1.139,-1.139,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.571,0.0,-0.0022,True,0.4603,-0.2066,0.1198,8.92,qp
+9,9,0.5824,-0.1791,0.6481,0.0288,0.0236,408,5.51,6,74,0,0.0,1,0.648,0.648,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.192,0.0,-0.0022,True,0.5456,-0.2066,0.1198,5.36,qp
+10,10,0.5298,0.2871,-0.468,0.0594,0.0507,737,5.94,6,124,0,0.0,1,-0.468,-0.468,True,,0,0.507,0.0,-0.0113,True,0.4586,-0.3115,0.1238,9.65,qp
+11,11,0.3673,-0.0006,0.6377,0.0373,0.0312,555,6.17,7,90,0,0.0,1,0.638,0.638,True,,0,0.401,0.0,-0.0102,True,0.4852,-0.3098,0.1238,8.02,qp
+12,12,0.4027,0.3753,-1.9521,0.0785,0.074,1366,11.98,150,114,0,0.0,1,,,False,"ik_infeasible (joint7 at limit, err 5 mm) @ above_tray",0,0.0,0.2,,False,0.4027,0.3753,0.1198,0.3,qp
+13,13,0.5808,0.2985,1.9542,0.0501,0.0423,732,5.76,6,127,0,0.0,1,1.954,1.954,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.214,0.0,-0.0022,True,0.4845,-0.2052,0.1198,7.91,qp
+14,14,0.571,-0.1168,1.2738,0.0302,0.0248,434,5.71,6,76,0,0.0,1,1.274,1.274,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.224,0.0,-0.0017,True,0.5152,-0.209,0.1198,5.46,qp
+15,15,0.5309,0.2653,-0.9776,0.0502,0.0424,714,5.95,7,120,0,0.0,1,-0.978,-0.978,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.63,0.0,-0.0029,True,0.4775,-0.2071,0.1198,7.57,qp
+16,16,0.4944,-0.0582,-2.5505,0.0198,0.0192,319,11.39,150,28,0,1.0,1,,,False,"ik_infeasible (joint7 at limit, err 2 mm) @ pregrasp",0,0.0,0.2,,False,0.4944,-0.0582,0.1198,0.3,qp
+17,17,0.4917,-0.1108,-1.7911,0.0311,0.0305,562,18.73,150,30,0,1.0,1,,,False,"ik_infeasible (joint2 at limit, err 32 mm) @ pregrasp",0,0.0,0.2,,False,0.4917,-0.1108,0.1198,0.3,qp
+18,18,0.4458,0.1826,-1.3771,0.0447,0.0378,661,6.06,7,109,0,0.0,1,-1.377,-1.377,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.765,0.0,-0.0016,True,0.4735,-0.2066,0.1217,7.04,qp
+19,19,0.4519,0.3577,-1.4208,0.0588,0.0501,857,6.26,41,137,0,0.0,1,-1.421,-1.421,False,cube_tray_collision (knocked off by tray rim) @ above_tray,1,1.437,0.0,-0.0016,True,0.4701,-0.2098,0.1198,8.39,qp
+20,20,0.4112,-0.0326,-2.3768,0.0586,0.0549,1008,13.44,150,75,0,0.0,1,,,False,"ik_infeasible (joint7 at limit, err 2 mm) @ above_tray",0,0.0,0.2,,False,0.4112,-0.0326,0.1198,0.3,qp
+21,21,0.5565,0.0889,1.3182,0.039,0.0328,551,5.86,6,94,0,0.0,1,1.318,1.318,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.249,0.0,-0.0018,True,0.4881,-0.2092,0.1198,6.32,qp
+22,22,0.3557,0.1287,-0.2555,0.0445,0.0377,660,6.23,8,106,0,0.0,1,-0.255,-0.255,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.438,0.0,-0.011,True,0.4457,-0.2925,0.1238,6.9,qp
+23,23,0.5312,0.1188,-2.3333,0.0562,0.0526,960,11.03,150,87,0,0.0,1,,,False,"ik_infeasible (joint7 at limit, err 3 mm) @ above_tray",0,0.0,0.2,,False,0.5312,0.1188,0.1198,0.3,qp
+24,24,0.4258,-0.0797,0.4696,0.0332,0.0274,476,6.03,7,79,0,0.0,1,0.47,0.47,True,,0,0.367,0.0,-0.0114,True,0.4846,-0.3123,0.1238,7.49,qp

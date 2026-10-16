@@ -1,0 +1,26 @@
+episode,seed,cube_x,cube_y,cube_yaw,plan_time_s,ik_time_s,ik_iters_total,ik_iters_mean,ik_iters_max,waypoints,joint_limit_viol,plan_min_clear,yaw_tries,grasp_yaw,place_yaw,success,failure_reason,vel_viol,max_vel_ratio,min_clear_robot,min_clear_cube_tray,cube_tray_contact,final_cube_x,final_cube_y,final_cube_z,sim_time_s,method
+0,0,0.5658,0.3467,0.67,0.0255,0.0174,270,2.0,2,135,0,0.0,1,0.67,0.67,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.271,0.0,-0.0037,True,0.4947,-0.2065,0.1198,8.29,pinv
+1,1,0.4784,0.3784,-2.2358,0.0258,0.0178,280,2.0,2,140,55,0.0,1,-2.236,-2.236,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.297,0.0,-0.0113,True,0.485,-0.3213,0.1278,8.53,pinv
+2,2,0.4059,-0.1693,1.9743,0.0154,0.0101,152,2.0,2,76,0,0.0,1,1.974,1.974,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.334,0.0,-0.0016,True,0.4356,-0.2106,0.1198,5.46,pinv
+3,3,0.5624,0.069,-2.5502,0.0175,0.0117,182,2.0,2,91,41,0.0,1,-2.55,-2.55,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.56,0.0,-0.011,True,0.505,-0.3081,0.1238,6.18,pinv
+4,4,0.6035,0.0095,2.9923,0.0174,0.0115,174,2.0,2,87,0,0.0,1,2.992,2.992,True,,0,0.386,0.0,-0.0114,True,0.4885,-0.3215,0.1238,7.88,pinv
+5,5,0.5635,0.2587,0.0963,0.0337,0.023,240,2.0,2,120,0,0.0,1,0.096,0.096,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.4,0.0,-0.0113,True,0.4991,-0.3069,0.1238,7.57,pinv
+6,6,0.4861,-0.1317,-0.8227,0.0146,0.0095,146,2.0,2,73,0,0.0,1,-0.823,-0.823,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.534,0.0,-0.0031,True,0.467,-0.2011,0.1198,5.32,pinv
+7,7,0.5113,0.3337,1.7322,0.0246,0.0169,264,2.0,2,132,0,0.0,1,1.732,1.732,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.199,0.0,-0.0014,True,0.4747,-0.2087,0.1198,8.15,pinv
+8,8,0.4248,0.4093,-1.1391,0.0271,0.0186,296,2.0,2,148,0,0.0,1,-1.139,-1.139,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.569,0.0,-0.0022,True,0.4603,-0.2067,0.1198,8.92,pinv
+9,9,0.5824,-0.1791,0.6481,0.0146,0.0096,148,2.0,2,74,0,0.0,1,0.648,0.648,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.192,0.0,-0.0022,True,0.5464,-0.2071,0.1198,5.36,pinv
+10,10,0.5298,0.2871,-0.468,0.04,0.0275,248,2.0,2,124,0,0.0,1,-0.468,-0.468,True,,0,0.508,0.0,-0.0102,True,0.4592,-0.3111,0.1238,9.65,pinv
+11,11,0.3673,-0.0006,0.6377,0.0183,0.0122,180,2.0,2,90,0,0.0,1,0.638,0.638,True,,0,0.4,0.0,-0.0099,True,0.4862,-0.3083,0.1238,8.02,pinv
+12,12,0.4027,0.3753,-1.9521,0.0258,0.0178,284,2.0,2,142,67,0.0,1,-1.952,-1.952,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.328,0.0,-0.0111,True,0.466,-0.315,0.1238,8.63,pinv
+13,13,0.5808,0.2985,1.9542,0.0233,0.016,254,2.0,2,127,0,0.0,1,1.954,1.954,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.214,0.0,-0.0021,True,0.4841,-0.2052,0.1198,7.91,pinv
+14,14,0.571,-0.1168,1.2738,0.015,0.0098,152,2.0,2,76,0,0.0,1,1.274,1.274,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.224,0.0,-0.0016,True,0.5174,-0.2096,0.1198,5.46,pinv
+15,15,0.5309,0.2653,-0.9776,0.0426,0.0278,240,2.0,2,120,0,0.0,1,-0.978,-0.978,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.63,0.0,-0.0029,True,0.4698,-0.2062,0.1237,7.57,pinv
+16,16,0.4944,-0.0582,-2.5505,0.0152,0.0101,158,2.0,2,79,52,0.0,1,-2.551,-2.551,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.612,0.0,-0.0116,True,0.4971,-0.3133,0.1302,5.6,pinv
+17,17,0.4917,-0.1108,-1.7911,0.0147,0.0097,148,2.0,2,74,53,0.0,1,-1.791,-1.791,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.806,0.0,-0.011,True,0.4789,-0.3161,0.1276,5.36,pinv
+18,18,0.4458,0.1826,-1.3771,0.0204,0.0139,218,2.0,2,109,0,0.0,1,-1.377,-1.377,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.761,0.0,-0.0016,True,0.474,-0.2092,0.1198,7.04,pinv
+19,19,0.4519,0.3577,-1.4208,0.0255,0.0175,274,2.0,2,137,21,0.0,1,-1.421,-1.421,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.654,0.0,-0.0016,True,0.4703,-0.2068,0.1198,8.39,pinv
+20,20,0.4112,-0.0326,-2.3768,0.0172,0.0117,168,2.0,2,84,56,0.0,1,-2.377,-2.377,True,,0,0.589,0.0,-0.0106,True,0.474,-0.3253,0.1238,7.73,pinv
+21,21,0.5565,0.0889,1.3182,0.0238,0.0159,188,2.0,2,94,0,0.0,1,1.318,1.318,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.248,0.0,-0.0019,True,0.4873,-0.2092,0.1198,6.32,pinv
+22,22,0.3557,0.1287,-0.2555,0.0234,0.0157,212,2.0,2,106,0,0.0,1,-0.255,-0.255,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.439,0.0,-0.011,True,0.4442,-0.2851,0.1238,6.9,pinv
+23,23,0.5312,0.1188,-2.3333,0.0185,0.0125,196,2.0,2,98,68,0.0,1,-2.333,-2.333,False,cube_tray_collision (knocked off by tray rim) @ above_tray,0,0.556,0.0,-0.0105,True,0.5022,-0.303,0.1238,6.52,pinv
+24,24,0.4258,-0.0797,0.4696,0.0176,0.0117,158,2.0,2,79,0,0.0,1,0.47,0.47,True,,0,0.366,0.0,-0.0111,True,0.4842,-0.3126,0.1238,7.49,pinv

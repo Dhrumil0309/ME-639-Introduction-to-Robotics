@@ -1,0 +1,26 @@
+episode,cube_x,cube_y,success,failure_reason,min_distance_margin_m,time_to_solve_s,ik_iterations,screenshot
+1,0.3198,-0.393,False,place_unsettled (box is still moving),-0.0003,6.228,17600,task10_batch/screenshots/episode_01_FAILURE.png
+2,0.306,-0.3494,True,,-0.0001,5.894,16703,task10_batch/screenshots/episode_02_SUCCESS.png
+3,0.3049,-0.3568,False,place_unsettled (box is still moving),-0.0003,6.113,16827,task10_batch/screenshots/episode_03_FAILURE.png
+4,0.3011,-0.2829,False,place_miss (box is outside the tray opening),-0.0006,5.426,15506,task10_batch/screenshots/episode_04_FAILURE.png
+5,0.3042,-0.2917,False,place_unsettled (box is still moving),-0.0005,5.557,15685,task10_batch/screenshots/episode_05_FAILURE.png
+6,0.2973,-0.3726,False,place_miss (box is outside the tray opening),-0.0001,6.103,17064,task10_batch/screenshots/episode_06_FAILURE.png
+7,0.3228,-0.3039,False,place_unsettled (box is still moving),-0.0005,5.51,16084,task10_batch/screenshots/episode_07_FAILURE.png
+8,0.306,-0.285,False,place_miss (box is outside the tray opening),-0.0006,5.44,15593,task10_batch/screenshots/episode_08_FAILURE.png
+9,0.289,-0.3415,False,place_unsettled (box is still moving),-0.0003,5.725,16434,task10_batch/screenshots/episode_09_FAILURE.png
+10,0.3136,-0.2972,False,place_unsettled (box is still moving),-0.0002,5.665,15873,task10_batch/screenshots/episode_10_FAILURE.png
+11,0.2983,-0.3963,False,place_unsettled (box is still moving),-0.0003,6.338,17515,task10_batch/screenshots/episode_11_FAILURE.png
+12,0.2969,-0.3826,False,place_unsettled (box is still moving),-0.001,6.254,17249,task10_batch/screenshots/episode_12_FAILURE.png
+13,0.3253,-0.3081,False,place_unsettled (box is still moving),-0.0003,5.545,16179,task10_batch/screenshots/episode_13_FAILURE.png
+14,0.3058,-0.3713,False,place_unsettled (box is still moving),-0.0004,5.96,17099,task10_batch/screenshots/episode_14_FAILURE.png
+15,0.2852,-0.3639,False,place_unsettled (box is still moving),-0.0004,5.825,16827,task10_batch/screenshots/episode_15_FAILURE.png
+16,0.2982,-0.3531,False,place_unsettled (box is still moving),-0.0004,5.909,16712,task10_batch/screenshots/episode_16_FAILURE.png
+17,0.3041,-0.3238,False,place_unsettled (box is still moving),-0.0003,5.517,16231,task10_batch/screenshots/episode_17_FAILURE.png
+18,0.2997,-0.3075,False,place_miss (box is outside the tray opening),-0.0024,5.518,15908,task10_batch/screenshots/episode_18_FAILURE.png
+19,0.2817,-0.3743,False,place_miss (box is outside the tray opening),-0.0003,6.019,17005,task10_batch/screenshots/episode_19_FAILURE.png
+20,0.2856,-0.3445,False,place_unsettled (box is still moving),-0.0004,5.822,16468,task10_batch/screenshots/episode_20_FAILURE.png
+21,0.3066,-0.3786,False,place_unsettled (box is still moving),-0.0002,6.23,17239,task10_batch/screenshots/episode_21_FAILURE.png
+22,0.2866,-0.2884,False,place_miss (box is outside the tray opening),-0.0005,5.386,15462,task10_batch/screenshots/episode_22_FAILURE.png
+23,0.3044,-0.3458,False,place_unsettled (box is still moving),-0.0004,5.991,16625,task10_batch/screenshots/episode_23_FAILURE.png
+24,0.3199,-0.342,False,place_unsettled (box is still moving),-0.0005,5.937,16691,task10_batch/screenshots/episode_24_FAILURE.png
+25,0.2905,-0.3947,False,place_unsettled (box is still moving),-0.0008,6.428,17439,task10_batch/screenshots/episode_25_FAILURE.png

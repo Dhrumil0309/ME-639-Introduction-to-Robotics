@@ -1,0 +1,13 @@
+experiment,method,episodes,success,success_rate,ci95,plan_time_ms,plan_time_std,ik_iters_per_waypoint,ik_iters_max,min_clear_robot_mm,min_clear_cube_tray_mm,cube_tray_contacts,joint_limit_viol,vel_viol,max_vel_ratio,main_failure
+nominal,mink,25,25,1.0,0.87-1.00,36.7,5.7,1.01,5,0.0,0.0,0,0,0,0.39,-
+nominal,pinv,25,25,1.0,0.87-1.00,26.3,5.5,2.0,2,0.0,0.0,0,0,0,0.39,-
+nominal,dls,25,25,1.0,0.87-1.00,32.1,5.2,2.14,3,0.0,0.0,0,0,0,0.4,-
+nominal,qp,25,25,1.0,0.87-1.00,53.7,8.7,5.89,7,0.0,0.0,0,0,0,0.39,-
+stress,mink,25,25,1.0,0.87-1.00,37.5,6.5,1.01,4,0.0,0.0,0,0,0,0.52,-
+stress,pinv,25,25,1.0,0.87-1.00,25.7,4.2,2.0,2,0.0,0.0,0,0,0,0.52,-
+stress,dls,25,25,1.0,0.87-1.00,31.8,5.8,2.14,3,0.0,0.0,0,0,0,0.52,-
+stress,qp,25,25,1.0,0.87-1.00,55.1,9.3,5.91,7,0.0,0.0,0,0,0,0.52,-
+naive,mink,25,4,0.16,0.06-0.35,45.8,18.7,2.0,150,0.0,-10.9,0,0,4,3.27,ik_infeasible
+naive,pinv,25,5,0.2,0.09-0.39,22.3,7.5,2.0,2,0.0,-11.6,0,413,0,0.81,cube_tray_collision
+naive,dls,25,6,0.24,0.11-0.43,27.6,9.2,2.25,3,0.0,-12.6,0,375,0,0.81,cube_tray_collision
+naive,qp,25,4,0.16,0.06-0.35,46.9,14.2,7.68,150,-0.2,-54.1,0,0,1,1.44,cube_tray_collision

@@ -1,0 +1,4 @@
+Method,Episodes,Success Rate (%),Mean Time (s),Mean IK Iters,Joint Violations,Velocity Violations,Max Joint Vel (rad/s)
+Mink (Off-the-shelf),25,0.0,24.62,32044.0,0,0,3.14
+DLS-IK (Closed-loop Damped),25,0.0,3.44,39382.7,0,74127,761.3
+QP-IK (Joint & Velocity Constrained),25,0.0,5.18,57707.4,0,129387,15.71

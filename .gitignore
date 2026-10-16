@@ -12,3 +12,15 @@ __pycache__/
 # Virtual environments
 venv/
 .venv/
+
+# Archive files
+*.zip
+*.tar.gz
+
+# MuJoCo logs
+MUJOCO_LOG.TXT
+mujoco.log
+
+# VSCode settings
+.vscode/
+

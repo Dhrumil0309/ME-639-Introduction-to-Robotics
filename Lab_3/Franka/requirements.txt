@@ -1,0 +1,10 @@
+mujoco>=3.2
+mink>=0.0.10
+daqp
+quadprog
+numpy
+pandas
+matplotlib
+imageio
+imageio-ffmpeg
+opencv-python

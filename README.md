@@ -32,6 +32,11 @@ ME-639-Introduction-to-Robotics/
 │               │   └── tf_broadcaster_node.py <- TF broadcaster with live parameter & keyboard toggle
 │               ├── package.xml
 │               └── setup.py
+└── Lab_3/                                    <- Lab 3: Pick & Place (HEAL 6-DOF & Franka 7-DOF)
+    ├── README.md                              <- Lab 3 detailed report & instructions
+    ├── HEAL/                                  <- 6-DOF HEAL Arm: IK solvers, logs, 3-min video
+    ├── Franka/                                <- 7-DOF Franka Panda: IK solvers, logs, 3-min video
+    └── report/                                <- 5-Page IEEE Conference Paper (LaTeX & figures)
 ```
 
 
@@ -144,3 +149,24 @@ While the node and RViz2 are running, you can toggle the composition rule at any
   ```
 * **Via Keyboard**:
   In the terminal running `tf_broadcaster_node`, type `t` (or `c` / `f`) and press Enter to toggle live.
+
+---
+
+## Lab 3: Inverse Kinematics & Pick-and-Place Manipulation (HEAL vs. Franka)
+
+Comparative kinematic modeling, workspace characterization, and real-time numerical Inverse Kinematics (DLS, QP-IK, Mink) for the **6-DOF HEAL industrial manipulator** and the **7-DOF Franka Emika Panda** in MuJoCo.
+
+### 📌 Interactive Notion Deliverables
+> 👉 [**Open Lab 3 Notion Workspace**](https://sour-grain-a01.notion.site/LAB_3-ITR-3f718e510a158056ab86d72f7af0095c?source=copy_link)  
+> Contains detailed step-by-step mathematical derivations, interactive logs, high-resolution failure captures, and full deliverables analysis.
+
+### Quick Links to Lab 3 Files:
+* 📄 **Lab 3 Detailed Guide**: [`Lab_3/README.md`](./Lab_3/README.md)
+* 📑 **5-Page IEEE Conference Paper**: [`Lab_3/report/main.tex`](./Lab_3/report/main.tex)
+* 🎬 **6-DOF HEAL 3-Min Comparison Video**: [`Lab_3/HEAL/HEAL_3min_IK_comparison.mp4`](./Lab_3/HEAL/HEAL_3min_IK_comparison.mp4)
+* 🎬 **7-DOF Franka 3-Min Comparison Video**: [`Lab_3/Franka/Franka_3min_IK_comparison.mp4`](./Lab_3/Franka/Franka_3min_IK_comparison.mp4)
+* 🤖 **HEAL Main Simulator**: [`Lab_3/HEAL/run_pick_and_place_mink.py`](./Lab_3/HEAL/run_pick_and_place_mink.py)
+* 🤖 **Franka Main Simulator**: [`Lab_3/Franka/pick_place.py`](./Lab_3/Franka/pick_place.py)
+* ⚖️ **Franka 300-Run Benchmark**: [`Lab_3/Franka/compare.py`](./Lab_3/Franka/compare.py)
+* ⚖️ **HEAL 75-Run Benchmark**: [`Lab_3/HEAL/task13_comparison/compare_ik_methods.py`](./Lab_3/HEAL/task13_comparison/compare_ik_methods.py)
+
